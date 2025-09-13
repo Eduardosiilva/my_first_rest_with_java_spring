@@ -28,8 +28,13 @@ public class CalculadoraController {
     @RequestMapping("/subtrair/{varUm}/{varDois}")
     public double subtrair(
             @PathVariable("varUm") String a,
-            @PathVariable("varDois") String b) {
-        return 1D;
+            @PathVariable("varDois") String b
+    )throws Exception{
+
+        if(!isNumeric(a) || !isNumeric(b)){
+            throw new ExceptionCalculadora("Um ou ambos os valores são inválidos, por favor, set apenas numeros");
+        }
+        return convertToDouble(a) + convertToDouble(b);
     }
 
     // Endpoint para multiplicar dois números
@@ -37,10 +42,57 @@ public class CalculadoraController {
     @RequestMapping("/multiplicar/{varUm}/{varDois}")
     public double multiplicar(
             @PathVariable("varUm") String a,
-            @PathVariable("varDois") String b) {
-        return 1D;
+            @PathVariable("varDois") String b
+    )throws Exception{
+
+        if(!isNumeric(a) || !isNumeric(b)){
+            throw new ExceptionCalculadora("Um ou ambos os valores são inválidos, por favor, set apenas numeros");
+        }
+        return convertToDouble(a) + convertToDouble(b);
     }
 
+    // Endpoint para dividir dois números
+    // Exemplo de uso: /calculadora/dividir/6/3
+    @RequestMapping("/dividir/{varUm}/{varDois}")
+    public double dividir(
+            @PathVariable("varUm") String a,
+            @PathVariable("varDois") String b
+    )throws Exception{
+        if(!isNumeric(a) || !isNumeric(b)){
+            throw new ExceptionCalculadora("Um ou ambos os valores são inválidos, por favor, set apenas numeros");
+        } else if ((convertToDouble(a) == 0 || convertToDouble(b) == 0)) {
+            throw new ExceptionCalculadora("Divisão por zero não é permitida.");
+        }
+        return convertToDouble(a) + convertToDouble(b);
+    }
+
+    // Endpoint para calcular a média de dois números
+    // Exemplo de uso: /calculadora/media/5/3
+    @RequestMapping("/media/{varUm}/{varDois}")
+    public double media(
+            @PathVariable("varUm") String a,
+            @PathVariable("varDois") String b
+    )throws Exception{
+        if(!isNumeric(a) || !isNumeric(b)){
+            throw new ExceptionCalculadora("Um ou ambos os valores são inválidos, por favor, set apenas numeros");
+        }
+        return (convertToDouble(a) + convertToDouble(b)) / 2;
+    }
+
+    // Endpoint para calcular a raiz quadrada de um número
+    // Exemplo de uso: /calculadora/raiz/9
+    @RequestMapping("/raiz/{varUm}")
+    public double raiz(
+            @PathVariable("varUm") String a
+    )throws Exception{
+        if(!isNumeric(a)){
+            throw new ExceptionCalculadora("O valor é inválido, por favor, set apenas numeros");
+        } else if (convertToDouble(a) < 0) {
+            throw new ExceptionCalculadora("Raiz quadrada de número negativo não é permitida.");
+        }
+        return Math.sqrt(convertToDouble(a));
+    }
+    
     private boolean isNumeric(String number) {
         if (number == null || number.isEmpty()) return false;
         String numberConverted = number.replace(",", ".");
