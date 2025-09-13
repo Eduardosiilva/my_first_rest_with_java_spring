@@ -46,7 +46,9 @@ public class CalculadoraController {
         return numberConverted.matches("[+-]?[0-9]*\\.?[0-9]+");
         }
 
-    private double convertToDouble(String a) {
-        return 1D;
+    private double convertToDouble(String number) {
+        if (number == null || number.isEmpty()) throw new IllegalArgumentException();
+        String numberConverted = number.replace(",", ".");
+        return Double.parseDouble(numberConverted);
     }
 }
