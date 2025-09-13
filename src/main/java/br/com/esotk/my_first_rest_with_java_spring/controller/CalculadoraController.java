@@ -1,5 +1,6 @@
 package br.com.esotk.my_first_rest_with_java_spring.controller;
 
+import br.com.esotk.my_first_rest_with_java_spring.exception.ExceptionCalculadora;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +18,7 @@ public class CalculadoraController {
     ) throws Exception{
 
         if(!isNumeric(a) || !isNumeric(b)){
-            throw new IllegalArgumentException("Por favor, envie apenas números!");
+            throw new ExceptionCalculadora("Um ou ambos os valores são inválidos, por favor, set apenas numeros");
         }
         return convertToDouble(a) + convertToDouble(b);
     }
@@ -47,7 +48,6 @@ public class CalculadoraController {
         }
 
     private double convertToDouble(String number) {
-        if (number == null || number.isEmpty()) throw new IllegalArgumentException();
         String numberConverted = number.replace(",", ".");
         return Double.parseDouble(numberConverted);
     }
