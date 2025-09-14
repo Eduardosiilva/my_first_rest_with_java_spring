@@ -14,6 +14,21 @@ public class UserServices {
     private final AtomicLong counter = new AtomicLong();
     private Logger logger = Logger.getLogger(UserServices.class.getName());
 
+
+    public User criarUsuario(User user) {
+        logger.info("criando usuario");
+        return user;
+    }
+
+    public User atualizarUsuario(User user) {
+        logger.info("atualizando usuario");
+        return user;
+    }
+
+    public void excluirUsuario(String id) {
+        logger.info("deletando usuario");
+    }
+
     public List<User> findAllIds() {
         logger.info("buscando todos os usuarios");
         var users = new ArrayList<User>();
