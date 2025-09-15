@@ -20,7 +20,7 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public List<User> findAll() {
-        return services.findAllIds();
+        return services.findAll();
     }
 
     @RequestMapping(
@@ -28,7 +28,7 @@ public class UserController {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public User findById(@PathVariable("id") String id) {
+    public User findById(@PathVariable("id") Long id) {
        return services.findById(id);
     }
 
@@ -54,7 +54,7 @@ public class UserController {
     @RequestMapping( value = "/{id}",
             method = RequestMethod.DELETE
     )
-    public void excluirUsuario(@PathVariable("id") String id) {
+    public void excluirUsuario(@PathVariable("id") Long id) {
         services.excluirUsuario(id);
     }
 
