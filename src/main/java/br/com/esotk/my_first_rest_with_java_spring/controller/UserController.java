@@ -17,32 +17,47 @@ public class UserController {
     @Autowired
     private UserServices services;
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_YAML_VALUE})
     public List<UserDTO> findAll() {
         return services.findAll();
     }
 
     @GetMapping(
         value = "/{id}",
-        produces = MediaType.APPLICATION_JSON_VALUE
-    )
+        produces = {
+                MediaType.APPLICATION_JSON_VALUE,
+                MediaType.APPLICATION_XML_VALUE,
+                MediaType.APPLICATION_YAML_VALUE})
     public UserDTO findById(@PathVariable("id") Long id) {
        return services.findById(id);
     }
 
     @PostMapping(
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
+        consumes = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_YAML_VALUE},
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_YAML_VALUE})
     public UserDTO criarUsuario(@RequestBody UserDTO user) {
 
         return services.criarUsuario(user);
     }
 
     @PutMapping(
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
+       consumes = {
+           MediaType.APPLICATION_JSON_VALUE,
+           MediaType.APPLICATION_XML_VALUE,
+           MediaType.APPLICATION_YAML_VALUE},
+       produces = {
+           MediaType.APPLICATION_JSON_VALUE,
+           MediaType.APPLICATION_XML_VALUE,
+           MediaType.APPLICATION_YAML_VALUE})
     public UserDTO atualizarUsuario(@RequestBody UserDTO user) {
 
         return services.atualizarUsuario(user);

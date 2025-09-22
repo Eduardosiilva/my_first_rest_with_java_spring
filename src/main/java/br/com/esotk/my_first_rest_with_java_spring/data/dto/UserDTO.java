@@ -19,6 +19,5 @@ public class UserDTO implements Serializable {
     private String sobrenome;
     @JsonProperty("email")
     private String email_pessoal;
-    @JsonIgnore
     private String Genero;
 }
