@@ -11,3 +11,8 @@ spring:
       format_sql: true
     show-sql: false
     open-in-view: false
+
+springdoc:
+  path-to-match: /api/**/v1/**
+  swagger-ui:
+    use-root-path: true
