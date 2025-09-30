@@ -15,8 +15,8 @@ import java.util.List;
 
 public interface BooksControllerDocs {
 
-    @Operation(summary = "Finds all Bookss",
-            description = "Finds all Bookss",
+    @Operation(summary = "Finds all Books",
+            description = "Finds all Books",
             tags = {"Books"},
             responses = {
                     @ApiResponse(
