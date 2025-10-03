@@ -80,6 +80,17 @@ public class UserController implements UserControllerDocs {
         return services.atualizarUsuario(user);
     }
 
+    @PatchMapping(value = "/{id}",
+            produces = {
+                    MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE,
+                    MediaType.APPLICATION_YAML_VALUE})
+
+    @Override
+    public UserDTO disableUser(@PathVariable("id") Long id) {
+        return services.disableUser(id);
+    }
+
     @DeleteMapping(value = "/{id}")
 
     @Override

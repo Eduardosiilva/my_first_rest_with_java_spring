@@ -12,7 +12,7 @@ import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@JsonPropertyOrder({"id", "nome", "sobrenome", "Genero", "email_pessoal"})
+@JsonPropertyOrder({"id", "nome", "sobrenome", "Genero", "email_pessoal", "enabled"})
 public class UserDTO extends RepresentationModel<UserDTO> implements Serializable {
 
     @Serial
@@ -21,7 +21,9 @@ public class UserDTO extends RepresentationModel<UserDTO> implements Serializabl
     private Long id;
     private String nome;
     private String sobrenome;
+    private String Genero;
     @JsonProperty("email")
     private String email_pessoal;
-    private String Genero;
+    private Boolean enabled;
+
 }

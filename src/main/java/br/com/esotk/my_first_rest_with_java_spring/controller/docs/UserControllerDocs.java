@@ -101,6 +101,27 @@ public interface UserControllerDocs {
     )
     UserDTO atualizarUsuario(@RequestBody UserDTO user);
 
+    @Operation(summary = "Disables a User by its ID",
+            description = "Disables a User by its ID",
+            tags = {"User"},
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = UserDTO.class)
+                            )
+                    ),
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
+            }
+    )
+    UserDTO disableUser(@PathVariable("id") Long id);
+
     @Operation(summary = "Deletes a User",
             description = "Deletes a User",
             tags = {"User"},

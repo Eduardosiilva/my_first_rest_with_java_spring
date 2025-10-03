@@ -6,13 +6,13 @@ import br.com.esotk.my_first_rest_with_java_spring.exception.RequestWithObjectNu
 import br.com.esotk.my_first_rest_with_java_spring.exception.ResourceNotFoundException;
 import br.com.esotk.my_first_rest_with_java_spring.model.User;
 import br.com.esotk.my_first_rest_with_java_spring.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 import static br.com.esotk.my_first_rest_with_java_spring.mapper.ObjectMapper.parseListObjects;
 import static br.com.esotk.my_first_rest_with_java_spring.mapper.ObjectMapper.parseObject;
@@ -79,6 +79,22 @@ public class UserServices {
         addHateoas(dto);
         return dto;
     }
+
+    @Transactional
+    public UserDTO disableUser(Long id) {
+        logger.info("disable usuario");
+
+        userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found for this id :: " + id));
+        userRepository.disableUser(id);
+
+        var entity = userRepository.findById(id).get();
+        var dto = parseObject(entity, UserDTO.class);
+        addHateoas(dto);
+        return dto;
+    }
+
+
     public void excluirUsuario(Long id) {
         logger.info("excluindo usuario");
         User entity = userRepository.findById(id)
@@ -91,6 +107,7 @@ public class UserServices {
         dto.add(linkTo(methodOn(UserController.class).findAll()).withRel("findAll").withType("GET"));
         dto.add(linkTo(methodOn(UserController.class).criarUsuario(dto)).withRel("create").withType("POST"));
         dto.add(linkTo(methodOn(UserController.class).atualizarUsuario(dto)).withRel("update").withType("PUT"));
+        dto.add(linkTo(methodOn(UserController.class).disableUser(dto.getId())).withRel("disable").withType("PATCH"));
         dto.add(linkTo(methodOn(UserController.class).excluirUsuario(dto.getId())).withRel("delete").withType("DELETE"));
     }
 

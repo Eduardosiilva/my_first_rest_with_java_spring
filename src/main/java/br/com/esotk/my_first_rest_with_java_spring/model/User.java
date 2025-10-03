@@ -26,10 +26,14 @@ public class User implements Serializable {
     @Column(nullable = false, length = 80)
     private String sobrenome;
 
+    @Column(nullable = false, length = 15)
+    private String Genero;
+
     @Column(name = "email", nullable = false, length = 100)
     private String email_pessoal;
 
-    @Column(nullable = false, length = 15)
-    private String Genero;
+    @Column(nullable = false)
+    private Boolean enabled;
+
 }
 
