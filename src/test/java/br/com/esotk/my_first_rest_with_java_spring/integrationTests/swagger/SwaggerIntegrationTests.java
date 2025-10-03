@@ -5,19 +5,23 @@ import br.com.esotk.my_first_rest_with_java_spring.integrationTests.testsIntegra
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 
 import static io.restassured.RestAssured.given;
 
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class SwaggerIntegrationTests extends AbstractIntegrationTests {
 
-	@Test
+    @LocalServerPort
+    private int port;
+
+    @Test
 	void validaDocumentacaoSwagger() {
 
         var content = given()
                 .basePath("/swagger-ui/index.html")
-                    .port(TestConfigs.SERVER_PORT)
+                    .port(port)
                 .when()
                     .get()
                 .then()

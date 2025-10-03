@@ -1,7 +1,6 @@
-server:
-  port: 8888
+
 cors:
-  oringinsPatterns: http://localhost:3000,http://localhost:8080
+  originsPatterns: http://localhost:3000,http://localhost:8080
 spring:
   application: name=my_first_rest_with_java_spring
   datasource:
@@ -11,8 +10,8 @@ spring:
       ddl-auto: none
     properties:
       hibernate:
-      show-sql: false
-      open-in-view: false
+    show-sql: false
+    open-in-view: false
 springdoc:
   path-to-match: /api/**/v1/**
   swagger-ui:

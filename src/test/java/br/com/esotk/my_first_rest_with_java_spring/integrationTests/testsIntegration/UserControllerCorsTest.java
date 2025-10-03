@@ -13,19 +13,22 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class UserControllerTest extends AbstractIntegrationTests {
+class UserControllerCorsTest extends AbstractIntegrationTests {
 
     private static RequestSpecification specification;
     private static ObjectMapper objectMapper;
     private static UserDTO user;
 
+    @LocalServerPort
+    private int port;
 
     @BeforeAll
     static void setUp() {
@@ -42,21 +45,21 @@ class UserControllerTest extends AbstractIntegrationTests {
         specification = new RequestSpecBuilder()
             .addHeader(TestConfigs.HEADER_PARM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
             .setBasePath("/api/user/v1")
-            .setPort(TestConfigs.SERVER_PORT)
+            .setPort(port)
             .addFilter(new RequestLoggingFilter(LogDetail.ALL))
             .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
             .build();
 
         var content = given(specification)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+             .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(user)
-                .when()
+             .when()
                 .post()
-                .then()
+             .then()
                 .statusCode(200)
-                .extract()
+             .extract()
                 .body()
-                .asString();
+                   .asString();
 
         UserDTO createdUser = objectMapper.readValue(content, UserDTO.class);
         user = createdUser;
@@ -73,6 +76,7 @@ class UserControllerTest extends AbstractIntegrationTests {
        assertEquals("Santos", createdUser.getSobrenome());
        assertEquals("rafael@gmail.com", createdUser.getEmail());
        assertEquals("Masculino", createdUser.getGenero());
+       assertTrue(createdUser.getEnabled());
     }
 
     @Test
@@ -82,21 +86,21 @@ class UserControllerTest extends AbstractIntegrationTests {
         specification = new RequestSpecBuilder()
             .addHeader(TestConfigs.HEADER_PARM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST_NOT_AUT)
             .setBasePath("/api/user/v1")
-            .setPort(TestConfigs.SERVER_PORT)
+            .setPort(port)
             .addFilter(new RequestLoggingFilter(LogDetail.ALL))
             .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
             .build();
 
         var content = given(specification)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(user)
-                .when()
-                .post()
-                .then()
-                .statusCode(403)
-                .extract()
-                .body()
-                .asString();
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(user)
+            .when()
+            .post()
+            .then()
+            .statusCode(403)
+            .extract()
+            .body()
+            .asString();
 
         assertEquals("Invalid CORS request", content);
     }
@@ -107,7 +111,7 @@ class UserControllerTest extends AbstractIntegrationTests {
         specification = new RequestSpecBuilder()
             .addHeader(TestConfigs.HEADER_PARM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
             .setBasePath("/api/user/v1")
-            .setPort(TestConfigs.SERVER_PORT)
+            .setPort(port)
             .addFilter(new RequestLoggingFilter(LogDetail.ALL))
             .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
             .build();
@@ -138,6 +142,7 @@ class UserControllerTest extends AbstractIntegrationTests {
         assertEquals("Santos", createdUser.getSobrenome());
         assertEquals("rafael@gmail.com", createdUser.getEmail());
         assertEquals("Masculino", createdUser.getGenero());
+        assertTrue(createdUser.getEnabled());
     }
 
     @Test
@@ -146,7 +151,7 @@ class UserControllerTest extends AbstractIntegrationTests {
         specification = new RequestSpecBuilder()
                 .addHeader(TestConfigs.HEADER_PARM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST_NOT_AUT)
                 .setBasePath("/api/user/v1")
-                .setPort(TestConfigs.SERVER_PORT)
+                .setPort(port)
                 .addFilter(new RequestLoggingFilter(LogDetail.ALL))
                 .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
                 .build();
@@ -172,6 +177,7 @@ class UserControllerTest extends AbstractIntegrationTests {
         user.setSobrenome("Santos");
         user.setEmail("rafael@gmail.com");
         user.setGenero("Masculino");
+        user.setEnabled(true);
     }
 
 }

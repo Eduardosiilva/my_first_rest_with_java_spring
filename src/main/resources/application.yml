@@ -1,7 +1,5 @@
-server:
-  port: 8080
 cors:
-  oringinsPatterns: htt://localhost:3000,http://localhost:8080
+  originsPatterns: htt://localhost:3000,http://localhost:8080
 spring:
   application: name=my_first_rest_with_java_spring
   datasource:
