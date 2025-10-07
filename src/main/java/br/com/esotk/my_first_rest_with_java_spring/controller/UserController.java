@@ -39,6 +39,22 @@ public class UserController implements UserControllerDocs {
         return ResponseEntity.ok(services.findAll(pageable));
     }
 
+    @GetMapping(value = "/findUserByName/{nome}", produces = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_YAML_VALUE})
+    @Override
+    public ResponseEntity<PagedModel<EntityModel<UserDTO>>> findByName(
+            @PathVariable("nome") String nome,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "size", defaultValue = "12") Integer size,
+            @RequestParam(value = "direction", defaultValue = "asc") String direction
+    ){
+        var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC: Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "nome"));
+        return ResponseEntity.ok(services.findByName(nome, pageable));
+    }
+
     @GetMapping(
             value = "/{id}",
             produces = {

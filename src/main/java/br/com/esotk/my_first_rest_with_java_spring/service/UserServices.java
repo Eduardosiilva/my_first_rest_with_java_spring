@@ -10,7 +10,6 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
@@ -50,6 +49,28 @@ public class UserServices {
                         pageable.getPageNumber(),
                         pageable.getPageSize(),
                         String.valueOf(pageable.getSort())))
+                .withSelfRel();
+
+
+        return assembler.toModel(usersWithLinks, findAllLink);
+    }
+
+    public PagedModel<EntityModel<UserDTO>> findByName(String nome, Pageable pageable) {
+        logger.info("buscando usuarios por nome");
+
+        var users = userRepository.findUsersByName(nome, pageable);
+
+        var usersWithLinks = users.map(user -> {
+            var dto = parseObject(user, UserDTO.class);
+            addHateoas(dto);
+            return dto;
+        });
+
+        Link findAllLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class)
+                        .findAll(
+                                pageable.getPageNumber(),
+                                pageable.getPageSize(),
+                                String.valueOf(pageable.getSort())))
                 .withSelfRel();
 
 
