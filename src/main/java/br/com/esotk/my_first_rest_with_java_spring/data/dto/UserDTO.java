@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -13,6 +14,7 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @JsonPropertyOrder({"id", "nome", "sobrenome", "Genero", "email_pessoal", "enabled"})
+@Relation(collectionRelation = "User")
 public class UserDTO extends RepresentationModel<UserDTO> implements Serializable {
 
     @Serial

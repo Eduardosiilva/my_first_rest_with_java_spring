@@ -10,11 +10,15 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
-import static br.com.esotk.my_first_rest_with_java_spring.mapper.ObjectMapper.parseListObjects;
 import static br.com.esotk.my_first_rest_with_java_spring.mapper.ObjectMapper.parseObject;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -27,12 +31,29 @@ public class UserServices {
     @Autowired
     UserRepository userRepository;
 
-    public List<UserDTO> findAll() {
+    @Autowired
+    PagedResourcesAssembler<UserDTO> assembler;
+
+    public PagedModel<EntityModel<UserDTO>> findAll(Pageable pageable) {
         logger.info("buscando todos os usuarios");
 
-        var users = parseListObjects(userRepository.findAll(), UserDTO.class);
-        users.forEach(this::addHateoas);
-        return users;
+        var users = userRepository.findAll(pageable);
+
+        var usersWithLinks = users.map(user -> {
+            var dto = parseObject(user, UserDTO.class);
+            addHateoas(dto);
+            return dto;
+        });
+
+        Link findAllLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class)
+                .findAll(
+                        pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        String.valueOf(pageable.getSort())))
+                .withSelfRel();
+
+
+        return assembler.toModel(usersWithLinks, findAllLink);
     }
 
     public UserDTO findById(Long id) {
@@ -104,7 +125,7 @@ public class UserServices {
 
     private void addHateoas(UserDTO dto) {
         dto.add(linkTo(methodOn(UserController.class).findById(dto.getId())).withSelfRel().withType("GET"));
-        dto.add(linkTo(methodOn(UserController.class).findAll()).withRel("findAll").withType("GET"));
+        dto.add(linkTo(methodOn(UserController.class).findAll(1, 12, "asc")).withRel("findAll").withType("GET"));
         dto.add(linkTo(methodOn(UserController.class).criarUsuario(dto)).withRel("create").withType("POST"));
         dto.add(linkTo(methodOn(UserController.class).atualizarUsuario(dto)).withRel("update").withType("PUT"));
         dto.add(linkTo(methodOn(UserController.class).disableUser(dto.getId())).withRel("disable").withType("PATCH"));
