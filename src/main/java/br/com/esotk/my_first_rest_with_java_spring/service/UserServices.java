@@ -26,7 +26,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Service
 public class UserServices {
 
-    private Logger logger = LoggerFactory.getLogger(UserServices.class.getName());
+    private final Logger logger = LoggerFactory.getLogger(UserServices.class.getName());
 
     @Autowired
     UserRepository userRepository;

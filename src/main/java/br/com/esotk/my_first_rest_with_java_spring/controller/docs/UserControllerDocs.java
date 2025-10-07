@@ -38,12 +38,11 @@ public interface UserControllerDocs {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
             }
     )
-
     ResponseEntity<PagedModel<EntityModel<UserDTO>>> findAll(
                 @RequestParam(value = "page", defaultValue = "0") Integer page,
                 @RequestParam(value = "size", defaultValue = "12") Integer size,
                 @RequestParam(value = "direction", defaultValue = "asc") String direction
-                );
+    );
 
     @Operation(summary = "Finds a User by its ID",
             description = "Finds a User by its ID",
