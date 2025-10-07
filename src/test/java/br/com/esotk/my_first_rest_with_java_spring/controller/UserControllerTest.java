@@ -209,6 +209,39 @@ class UserControllerTest extends AbstractIntegrationTests {
         assertTrue(userOne.getEnabled());
     }
 
+    @Test
+    @Order(7)
+    void findByName() throws JsonProcessingException {
+        var content = given(specification)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .pathParam("nome", "Edu")
+                .queryParam("page", 0)
+                .queryParam("size", 12)
+                .queryParam("direction", "asc")
+                .when()
+                .get("findUserByName/{nome}")
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString();
+
+        WrapperUserDTO wrapper = objectMapper.readValue(content, WrapperUserDTO.class);
+        List<UserDTO> users = wrapper.getEmbedded().getUser();
+
+        UserDTO userOne = users.get(0);
+
+        assertNotNull(userOne.getId());
+        assertTrue(userOne.getId() > 0);
+
+        assertEquals("Eduardo", userOne.getNome());
+        assertEquals("Silva", userOne.getSobrenome());
+        assertEquals("EduardoS@gmail.com", userOne.getEmail());
+        assertEquals("Masculino", userOne.getGenero());
+        assertTrue(userOne.getEnabled());
+
+    }
+
     private void mockUser() {
 
         user.setNome("Diego");
