@@ -1,10 +1,11 @@
-package br.com.esotk.my_first_rest_with_java_spring.integrationTests.testsIntegration;
+package br.com.esotk.my_first_rest_with_java_spring.controller;
 
 
 import br.com.esotk.my_first_rest_with_java_spring.config.TestConfigs;
 import br.com.esotk.my_first_rest_with_java_spring.integrationTests.dto.UserDTO;
+import br.com.esotk.my_first_rest_with_java_spring.integrationTests.dto.wrappers.user.WrapperUserDTO;
+import br.com.esotk.my_first_rest_with_java_spring.integrationTests.testsIntegration.AbstractIntegrationTests;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.builder.RequestSpecBuilder;
@@ -19,7 +20,9 @@ import org.springframework.http.MediaType;
 
 import java.util.List;
 
+
 import static io.restassured.RestAssured.given;
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -179,6 +182,9 @@ class UserControllerTest extends AbstractIntegrationTests {
 
         var content = given(specification)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
+                .queryParam("page", 3)
+                .queryParam("size", 12)
+                .queryParam("direction", "asc")
                 .when()
                 .get()
                 .then()
@@ -187,23 +193,24 @@ class UserControllerTest extends AbstractIntegrationTests {
                 .body()
                 .asString();
 
-        List<UserDTO> users = objectMapper.readValue(content, new TypeReference<List<UserDTO>>() {});
-        UserDTO userOne = users.get(2);
-        user = userOne;
+        WrapperUserDTO wrapper = objectMapper.readValue(content, WrapperUserDTO.class);
+        List<UserDTO> users = wrapper.getEmbedded().getUser();
+
+        UserDTO userOne = users.get(0);
+
 
         assertNotNull(userOne.getId());
         assertTrue(userOne.getId() > 0);
 
-        assertEquals("Eduardo", userOne.getNome());
-        assertEquals("Silva", userOne.getSobrenome());
-        assertEquals("EduardoS@gmail.com", userOne.getEmail());
-        assertEquals("Masculino", userOne.getGenero());
+        assertEquals("Allister", userOne.getNome());
+        assertEquals("Cowterd", userOne.getSobrenome());
+        assertEquals("acowterd8w@comcast.net", userOne.getEmail());
+        assertEquals("Male", userOne.getGenero());
         assertTrue(userOne.getEnabled());
     }
 
     private void mockUser() {
 
-        user.setId(2L);
         user.setNome("Diego");
         user.setSobrenome("Augusto");
         user.setEmail("Diego@gmail.com");
