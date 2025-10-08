@@ -1,8 +1,6 @@
 package br.com.esotk.my_first_rest_with_java_spring.exception.handler;
 
-import br.com.esotk.my_first_rest_with_java_spring.exception.ExceptionResponse;
-import br.com.esotk.my_first_rest_with_java_spring.exception.RequestWithObjectNullException;
-import br.com.esotk.my_first_rest_with_java_spring.exception.ResourceNotFoundException;
+import br.com.esotk.my_first_rest_with_java_spring.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -45,6 +43,26 @@ public class CustomEntityResponseHandler extends ResponseEntityExceptionHandler 
                 request.getDescription(false)
         );
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(FileStorageException.class)
+    public final ResponseEntity<ExceptionResponse> handleFileStorageExceptions(Exception ex, WebRequest request) {
+        ExceptionResponse response = new ExceptionResponse(
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(FileStorageNotFoundException.class)
+    public final ResponseEntity<ExceptionResponse> handleFileStorageNotFoundExceptions(Exception ex, WebRequest request) {
+        ExceptionResponse response = new ExceptionResponse(
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
 }
